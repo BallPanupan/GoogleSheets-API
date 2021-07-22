@@ -1,9 +1,29 @@
 <?php
   require __DIR__.'/../vendor/autoload.php';
 
+  $client = new \Google_Client();
+  $client -> setApplicationName('Google Sheets and PHP');
+  $client -> setScopes(Google_Service_Sheets::SPREADSHEETS);
+  $client -> setAccessType('offline');
+  $client -> setAuthConfig('credentials.json');
+  $service = new Google_service_Sheets($client);
+
+  $spreadsheetId = '15-wJkhwP_vg8vcqtqcGR8YJuyenDd0HqaA0zUMeClFc';
+  $range = 'sheet_1!11:11';
+
+
+  print_r($_POST);
+  echo "<br/>";
+  
+  if(isset($_POST)){
+    new_row($service, $spreadsheetId, $range, $_POST);
+  }
+
   //new record | new row
-  function new_row($service, $spreadsheetId, $range){
-    $values = [["New Row", "Hello", "Ball", "Panupan"]];
+  function new_row($service, $spreadsheetId, $range, $new_record){
+
+    $values = [$new_record];
+    print_r($values);
 
     $body = new Google_Service_Sheets_ValueRange([
         'values' => $values
@@ -15,6 +35,7 @@
     ];
 
     $result = $service->spreadsheets_values->append($spreadsheetId, $range, $body, $params);
+    echo "<br/>";
     printf("%d cells appended.", $result->getUpdates()->getUpdatedCells());
   }
 
