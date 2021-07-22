@@ -37,6 +37,12 @@
     $result = $service->spreadsheets_values->append($spreadsheetId, $range, $body, $params);
     echo "<br/>";
     printf("%d cells appended.", $result->getUpdates()->getUpdatedCells());
+
+    $response = $service->spreadsheets_values->get($spreadsheetId, $range);
+    $values = $response->getValues();
+
+    //count row active
+    check_insert($service, $spreadsheetId, count_row($service, $spreadsheetId));
   }
 
 
@@ -44,11 +50,21 @@
   function count_row($service, $spreadsheetId){
     $result = $service->spreadsheets_values->get($spreadsheetId, "1:1000");
     $rowsactive = $result->getValues() != null ? count($result->getValues()) : 0;
+    echo "<br/>";
     echo "rows retrieved : " . $rowsactive;
-    $sheet_name = "sheet_1!";
-    $range = $sheet_name . ($rowsactive+1) . ":" . ($rowsactive+1);
+    return $rowsactive;
   }
 
+  //check data after insert new row
+  function check_insert($service, $spreadsheetId, $sheets_row){
+    $range = 'sheet_1!'.$sheets_row . ":" . $sheets_row;
+
+    $response = $service->spreadsheets_values->get($spreadsheetId, $range);
+    $values = $response->getValues();
+
+    echo "<br/>";
+    print_r($values);
+  }
 
 
   //Create a new sheet

@@ -68,7 +68,7 @@ $service = new Google_Service_Sheets($client);
 $spreadsheetId = '15-wJkhwP_vg8vcqtqcGR8YJuyenDd0HqaA0zUMeClFc';
 
 //range is "sheet name : row"
-$range = 'sheet_1!A1:F8';
+$range = 'sheet_1!12:12';
 $response = $service->spreadsheets_values->get($spreadsheetId, $range);
 $values = $response->getValues();
 
