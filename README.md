@@ -10,6 +10,8 @@ Before running this quickstart, be sure you have [Composer installed globally](h
 
 ```sh
 composer install
+
+composer require google/apiclient:^2.0
 ```
 
 ### Download Developer Credentials
