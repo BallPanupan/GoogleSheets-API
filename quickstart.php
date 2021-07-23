@@ -1,7 +1,7 @@
 <?php
 
 require 'vendor/autoload.php';
-require_once __DIR__ . "/API/api_function.php";
+require_once __DIR__ . "/API/API.php";
 
 
 $client = new \Google_Client();
@@ -22,8 +22,8 @@ $range = 'sheet_1!11:11';
 // insert new row
 //new_row($service, $spreadsheetId, 'A:A');
 
-// Create a new sheet
-// new_sheet($service, $spreadsheetId, "new sheetsX");
+//Create a new sheet
+// new_sheet($service, $spreadsheetId);
 
-// Create a new sheet
-xxx($service, $spreadsheetId);
+// Appending values
+insert_row_down($service, $spreadsheetId, $range);

@@ -12,12 +12,12 @@
   $range = 'sheet_1!11:11';
 
 
-  print_r($_POST);
-  echo "<br/>";
+  // print_r($_POST);
+  // echo "<br/>";
   
-  if(isset($_POST)){
-    new_row($service, $spreadsheetId, $range, $_POST);
-  }
+  // if(isset($_POST)){
+  //   new_row($service, $spreadsheetId, $range, $_POST);
+  // }
 
   //new record | new row
   function new_row($service, $spreadsheetId, $range, $new_record){
@@ -68,45 +68,100 @@
 
 
   //Create a new sheet
-  function new_sheet($service, $spreadsheetId, $title){
-    $title = "my new sheet";
+  function new_sheet($service, $spreadsheetId){
+    $title = "my new sheet2";
     //Create New Sheet
     $body = new Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
       array('requests' => array('addSheet' => array('properties' => array('title' => $title ))))
     );
 
-    $body = new Google_Service_Sheets_BatchUpdateSpreadsheetRequest([
-      'title' => $title
-    ]);
-
     $result = $service->spreadsheets->batchUpdate($spreadsheetId,$body);
   }
   
 
+  //Create a new sheet and add color
+  function new_sheet_color($service, $spreadsheetId, $range){
+    $title = "my new sheet2";
+    //Create New Sheet
 
-  function xxx($service, $spreadsheetId){
-    $range="sheet_1!11:11";
-    $values = array(
-      array(
-        "Tom", "Thumb", "tomthumb", "tom@thumb.com"
+    $array_x = array('requests' => array('addSheet' => array('properties' => array(
+      'title' => "new_sheets", 
+      'tabColor' => array(
+        'red' => '1.0',
+        'green' => '0.3',
+        'blue' => '0.4'
       )
-    );
-    $data = array();
+    ))));
 
-    $data[] = new Google_Service_Sheets_ValueRange(array(
-      'range' => $range,
-      'values' => $values
-      )
-    );
+    print_r(json_encode($array_x));
 
-    $body = new Google_Service_Sheets_BatchUpdateValuesRequest(array(
-      'valueInputOption' => 'RAW',
+    $body = new Google_Service_Sheets_BatchUpdateSpreadsheetRequest($array_x);
+    $result = $service->spreadsheets->batchUpdate($spreadsheetId,$body);
+  }
+
+  //
+  function add_newrow2($service, $spreadsheetId, $range){
+    $data = new Google_Service_Sheets_ValueRange(array(
+      'range' => 'sheet_1!11:11',
+      'values' => array(['1','2','3','4'])
+    ));
+
+    $requestBody = new Google_Service_Sheets_BatchUpdateValuesRequest(array(
+      'valueInputOption' => "RAW",
       'data' => $data
-      )
-    );
-    $result = $service->spreadsheets_values->batchUpdate($spreadsheetId, $body);
+    ));
+
+    $response = $service->spreadsheets_values->batchUpdate($spreadsheetId, $requestBody);
+  }
+
+  //change name of sheets
+  function change_sheet_name($service, $spreadsheetId, $range){
+    $requestBody = [
+      new Google_Service_Sheets_Request([
+          'updateSheetProperties' => [
+              'properties' => [
+                  'sheetId' => 1116031513,
+                  'title' => 'New_sheetX',
+              ],
+              'fields' => 'title'
+          ]
+      ])
+  ];
+
+  $batchUpdateRequest = new Google_Service_Sheets_BatchUpdateSpreadsheetRequest([
+    'requests' => $requestBody
+  ]);
+
+  $response = $service->spreadsheets->batchUpdate($spreadsheetId, $batchUpdateRequest);
+
   }
 
 
+
+  //insert row
+  function insert_row_down($service, $spreadsheetId, $range){
+    $requestBody = 
+      new Google_Service_Sheets_Request(
+        array(
+          'insertDimension' => array(
+              'range' => array(
+                  'sheetId' => 0,
+                  'dimension' => "ROWS",
+                  'startIndex' => 2,
+                  'endIndex' => 3
+              )
+          )
+      )
+      );
+
+
+  $batchUpdateRequest = new Google_Service_Sheets_BatchUpdateSpreadsheetRequest([
+    'requests' => $requestBody
+  ]);
+
+  $response = $service->spreadsheets->batchUpdate($spreadsheetId, $batchUpdateRequest);
+
+  print_r($batchUpdateRequest);
+  }
 
 ?>
