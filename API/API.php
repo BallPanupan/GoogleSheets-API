@@ -138,7 +138,7 @@
 
 
 
-  //insert row
+  //insert between row
   function insert_row_down($service, $spreadsheetId, $range){
     $requestBody = 
       new Google_Service_Sheets_Request(
@@ -148,8 +148,9 @@
                   'sheetId' => 0,
                   'dimension' => "ROWS",
                   'startIndex' => 2,
-                  'endIndex' => 3
-              )
+                  'endIndex' => 3,
+              ),
+            
           )
       )
       );
@@ -161,7 +162,7 @@
 
   $response = $service->spreadsheets->batchUpdate($spreadsheetId, $batchUpdateRequest);
 
-  print_r($batchUpdateRequest);
+  //print_r($response);
   }
 
 ?>
